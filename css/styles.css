@@ -1,0 +1,53 @@
+html {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Code', monospace;
+  background-image: linear-gradient(-225deg, rgb(0, 25, 253) 0%, #001746 52%, #1f222c 100%);
+  min-height: 100%;
+  padding-bottom: 5rem;
+}
+.title {
+  font-weight: bold;
+  font-size: 3rem;
+  text-transform: uppercase;
+  color: white;
+}
+.container {
+    background-color: rgba(255, 255, 255, 0.719);
+    border-radius: 10%;
+}
+header {
+  margin-top: 3rem;
+}
+header h1 {
+  color: white;
+}
+.arrangement-list .arrangement {
+  border-bottom: 1px solid #e1e1e1;
+  padding: 2rem;
+  padding-bottom: 3rem;
+  
+}
+.arrangement-list .arrangement:last-of-type {
+  border-bottom: 0;
+}
+
+.arrangement-list .arrangement p {
+  margin:0;
+}
+.arrangement-list .arrangement button {
+  margin-top: 1rem!important;
+}
+.arrangement-list .arrangement span {
+  font-weight: bold;
+}
+textarea {
+    height: 200px!important;
+}
+
+svg {
+  width: 21px;
+}

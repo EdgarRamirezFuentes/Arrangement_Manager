@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>.:Arrangement Manager:.</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h2 class="text-center my-5 title">Arrangement Manager</h2>
+    <div class="container mt-5 p-5">
+        <div id="content" class="row">
+            <div class="col-md-6 add-arrangement">
+                <form id="new-arrangement">
+                    <legend class="mb-4">Pet data</legend>
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Name: </label>
+                        <div class="col-sm-8 col-lg-8">
+                            <input type="text" id="pet" name="pet" class="form-control" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Owner: </label>
+                        <div class="col-sm-8 col-lg-8">
+                            <input type="text" id="owner" name="owner" class="form-control"  placeholder="Owner's name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Owner's phone: </label>
+                        <div class="col-sm-8 col-lg-8">
+                            <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Owner's phone">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Date: </label>
+                        <div class="col-sm-8 col-lg-8">
+                            <input type="date" id="date" name="date" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Hour:</label>
+                        <div class="col-sm-8 col-lg-8">
+                            <input type="time" id="hour" name="hour" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="font-weight-bold col-sm-4 col-lg-4 col-form-label">Symptoms:</label>
+                        <div class="col-sm-8 col-lg-8">
+                            <textarea id="symptoms" name="symptoms" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <button type="submit" class="btn btn-dark w-100 d-block">Schedule arrangment</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h2 id="manage" class="mb-4">Manage your arrangements</h2>
+                <ul id="arrangements" class="list-group arrangement-list"></ul>
+            </div>
+        </div> <!--.row-->
+    </div><!--.container-->
+
+    <script src="js/app.js"></script>
+
+</body>
+</html>
