@@ -77,10 +77,12 @@ class ArrangementsList {
         ui.printArrangementList(this.arrangements);
     }
 
-    updateArrangementData() {
+    updateArrangementData(arrangement) {
+        console.log(arrangement);
         this.arrangements = this.arrangements.map(arrangementMap => arrangementMap.id === arrangement.id ? arrangement : arrangementMap);
         this.updateArrangementList();
     }
+
 }
 
 class UI {
@@ -100,11 +102,10 @@ class UI {
         setTimeout( () => {
             messageContainer.remove();
         }, 3500);
-
     }
 
     printArrangementList(arrangementList) {
-        arrangementContainer.innerHTML = "";
+        this.cleanHTML();
         if(arrangementList.length == 0) {
             const uniqueArrangementContainer = document.createElement('div');
             arrangementContainer.classList.add('arrangement', 'p-3');
@@ -117,7 +118,6 @@ class UI {
         }
 
         arrangementList.forEach(arrangement => {
-
             const {id, pet, owner, phone, date, hour, symptoms} = arrangement;
             const uniqueArrangementContainer = document.createElement('div');
             uniqueArrangementContainer.classList.add('border', 'border-dark', 'rounded', 'mb-3', 'p-1', 'bg-light');
@@ -183,6 +183,12 @@ class UI {
             arrangementContainer.appendChild(uniqueArrangementContainer);
         });
     }
+
+    cleanHTML() {
+        while(arrangementContainer.firstChild) {
+            arrangementContainer.removeChild(arrangementContainer.firstChild);
+        }
+    }
 }
 
 
@@ -219,13 +225,13 @@ function addNewArrangement(e) {
         ui.printArrangementList(arrangementsList.arrangements);
         ui.printMessage("Arrangement scheduled successfully", "success");
     }else {
-        arrangementsList.updateArrangementData();
+        arrangementsList.updateArrangementData({...arrangement});
+        resetArrangementData();
         form.reset();
         ui.printArrangementList(arrangementsList.arrangements);
         ui.printMessage("Arrangement updated successfully", "success");
         form.querySelector('button[type="submit"]').textContent = 'Schedule arrangement';
         updateMode = false;
-        resetArrangementData();
     }
 }
 
