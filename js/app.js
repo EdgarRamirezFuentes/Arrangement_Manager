@@ -10,9 +10,11 @@ const symptomsInput = document.getElementById("symptoms");
 const form = document.getElementById("new-arrangement");
 const arrangementContainer = document.getElementById("arrangements");
 
+let updateMode = false;
+
 // Arrangement data object
 const arrangement = {
-    id : 0,
+    id : '',
     pet : '',
     owner : '',
     phone : '',
@@ -33,7 +35,7 @@ function eventListener() {
 }
 
 function resetArrangementData() {
-    arrangement.id = 0;
+    arrangement.id = '';
     arrangement.pet = '';
     arrangement.owner = '';
     arrangement.phone = '';
@@ -61,25 +63,29 @@ class ArrangementsList {
 
     addNewArrangement(arrangement) {
         this.arrangements.push(arrangement);
-        this.updateArrangementList(this.arrangements);
-        ui.printMessage("Arrangement scheduled successfully", "success");
-        console.log(this.arrangements);
+        this.updateArrangementList();
     }
 
-    updateArrangementList(arrangementList) {
-        localStorage.setItem('arrangements', JSON.stringify(arrangementList));
+    updateArrangementList() {
+        localStorage.setItem('arrangements', JSON.stringify(this.arrangements));
     }
 
     deleteArrangement(idArragement) {
+        this.arrangements = this.arrangements.filter(arrangement => arrangement.id !== idArragement);
+        this.updateArrangementList();
+        ui.printMessage('Arrangement deleted successfully', 'success');
+        ui.printArrangementList(this.arrangements);
+    }
 
+    updateArrangementData() {
+        this.arrangements = this.arrangements.map(arrangementMap => arrangementMap.id === arrangement.id ? arrangement : arrangementMap);
+        this.updateArrangementList();
     }
 }
 
 class UI {
 
     printMessage(message, type) {
-
-        // Create the container of the message
         const messageContainer = document.createElement('div');
         messageContainer.classList.add('text-center', 'alert', 'd-block', 'col-12');
 
@@ -93,7 +99,7 @@ class UI {
 
         setTimeout( () => {
             messageContainer.remove();
-        }, 5000);
+        }, 3500);
 
     }
 
@@ -102,31 +108,89 @@ class UI {
         if(arrangementList.length == 0) {
             const uniqueArrangementContainer = document.createElement('div');
             arrangementContainer.classList.add('arrangement', 'p-3');
-
             const message = document.createElement('p');
             message.classList.add('card-title', 'font-weight-bold');
             message.textContent = 'There are no pending arrangements.';
-
             arrangementContainer.appendChild(message);
-
             arrangementContainer.appendChild(uniqueArrangementContainer);
+            return;
         }
+
         arrangementList.forEach(arrangement => {
 
             const {id, pet, owner, phone, date, hour, symptoms} = arrangement;
             const uniqueArrangementContainer = document.createElement('div');
+            uniqueArrangementContainer.classList.add('border', 'border-dark', 'rounded', 'mb-3', 'p-1', 'bg-light');
             arrangementContainer.classList.add('arrangement', 'p-3');
             arrangementContainer.dataset.id = id;
 
-            const petParagraph = document.createElement('h2');
-            petParagraph.classList.add('card-title', 'font-weight-bold');
-            petParagraph.textContent = pet;
+            const petParagraph = document.createElement('p');
+            petParagraph.innerHTML = `
+                <span class="font-weight-bolder">Pet: </span> ${pet}
+            `;
 
-            arrangementContainer.appendChild(petParagraph);
+            const idParagraph = document.createElement('p');
+            idParagraph.innerHTML = `
+                <span class="font-weight-bolder">ID: </span> ${id}
+            `;
+
+            const ownerParagraph = document.createElement('p');
+            ownerParagraph.innerHTML = `
+                <span class="font-weight-bolder">Owner: </span> ${owner}
+            `;
+
+            const phoneParagraph = document.createElement('p');
+            phoneParagraph.innerHTML = `
+                <span class="font-weight-bolder">Phone: </span> ${phone}
+            `;
+
+            const dateParagraph = document.createElement('p');
+            dateParagraph.innerHTML = `
+                <span class="font-weight-bolder">Date: </span> ${date}
+            `;
+
+            const hourParagraph = document.createElement('p');
+            hourParagraph.innerHTML = `
+                <span class="font-weight-bolder">Hour: </span> ${hour}
+            `;
+
+            const symptomsParagraph = document.createElement('p');
+            symptomsParagraph.innerHTML = `
+                <span class="font-weight-bolder">Symptoms: </span> <br>${symptoms}
+            `;
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('btn', 'btn-danger', 'mr-2');
+            deleteButton.innerHTML = 'Delete <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+            deleteButton.onclick  = () => arrangementsList.deleteArrangement(id.toString());
+            
+            
+            const updateButton = document.createElement('button');
+            updateButton.classList.add('btn', 'btn-warning', 'mr-2');
+            updateButton.innerHTML = 'Update <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>';          
+            updateButton.onclick  = () => fillArrangementData(arrangement);
+
+            uniqueArrangementContainer.appendChild(idParagraph);
+            uniqueArrangementContainer.appendChild(petParagraph);
+            uniqueArrangementContainer.appendChild(ownerParagraph);
+            uniqueArrangementContainer.appendChild(phoneParagraph);
+            uniqueArrangementContainer.appendChild(dateParagraph);
+            uniqueArrangementContainer.appendChild(hourParagraph);
+            uniqueArrangementContainer.appendChild(symptomsParagraph);
+            uniqueArrangementContainer.appendChild(deleteButton);
+            uniqueArrangementContainer.appendChild(updateButton);
 
             arrangementContainer.appendChild(uniqueArrangementContainer);
         });
     }
+}
+
+
+function addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
 }
 
 function addNewArrangement(e) {
@@ -140,16 +204,60 @@ function addNewArrangement(e) {
         return;
     }
 
+    if( Date.parse(date) <= Date.now() ) {
+        ui.printMessage('Choose a valid date for your arrangement', 'error');
+        return;
+    }
+
+
     // Creates an unique ID and schedule the new arrangement
-    arrangement.id = Date.now();
-    arrangementsList.addNewArrangement({...arrangement});
-    resetArrangementData();
-    form.reset();
-    ui.printArrangementList(arrangementsList.arrangements);
+    if(!updateMode) {
+        arrangement.id = Date.now().toString();
+        arrangementsList.addNewArrangement({...arrangement});
+        resetArrangementData();
+        form.reset();
+        ui.printArrangementList(arrangementsList.arrangements);
+        ui.printMessage("Arrangement scheduled successfully", "success");
+    }else {
+        arrangementsList.updateArrangementData();
+        form.reset();
+        ui.printArrangementList(arrangementsList.arrangements);
+        ui.printMessage("Arrangement updated successfully", "success");
+        form.querySelector('button[type="submit"]').textContent = 'Schedule arrangement';
+        updateMode = false;
+        resetArrangementData();
+    }
 }
+
+function fillArrangementData (updateArrangement) {
+
+    const {id, pet, owner, phone, date, hour, symptoms} = updateArrangement;
+    updateMode = true;
+
+    // Set the values of the arrangement in the form
+    petInput.value = pet;
+    ownerInput.value = owner;
+    phoneInput.value = phone;
+    dateInput.value = date;
+    hourInput.value = hour;
+    symptomsInput.value = symptoms;
+
+    // Fill the object with the data
+    arrangement.id = id;
+    arrangement.pet = pet;
+    arrangement.phone = phone;
+    arrangement.date = date;
+    arrangement.hour = hour;
+    arrangement.symptoms = symptoms;
+    arrangement.owner = owner;
+
+
+    form.querySelector('button[type="submit"]').textContent = 'Save changes';
+}
+
+
 
 const ui = new UI();
 const arrangementsList = new ArrangementsList();
 eventListener();
-localStorage.clear();
 ui.printArrangementList(arrangementsList.arrangements);
